@@ -1,98 +1,138 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+---
+# 📄 Google Docs Reader (NestJS)
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+This project demonstrates how to authenticate with Google and fetch the content of a Google Doc using **NestJS** + **Google APIs**.
+---
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## 🚀 Prerequisites
 
-## Description
+1. **Install Node.js (>=18)**
+   👉 [Download here](https://nodejs.org/)
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+2. **Google Cloud Project Setup**
+   - Go to [Google Cloud Console](https://console.cloud.google.com/)
+   - Create a new project (e.g., `paxi-doc-poc`)
+   - Enable the following APIs:
+     - **Google Docs API**
+     - **Google Drive API**
 
-## Project setup
+   - Create **OAuth 2.0 Client ID** credentials:
+     - Application Type: **Web Application**
+     - Add **Authorized redirect URI**:
 
-```bash
-$ npm install
-```
+       ```
+       http://localhost:3000/auth/google/callback
+       ```
 
-## Compile and run the project
+   - Download the JSON credentials → save as `credentials.json` in project root.
 
-```bash
-# development
-$ npm run start
+3. **Install dependencies**
 
-# watch mode
-$ npm run start:dev
+   ```bash
+   npm install
+   ```
 
-# production mode
-$ npm run start:prod
-```
+---
 
-## Run tests
+## ▶️ Running the App
+
+Start the NestJS server:
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+npm run start:dev
 ```
 
-## Deployment
+This runs the app at:
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+```
+http://localhost:3000
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+Swagger UI is available at:
 
-## Resources
+```
+http://localhost:3000/api
+```
 
-Check out a few resources that may come in handy when working with NestJS:
+---
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+## 🔑 Authentication Flow (First Time)
 
-## Support
+1. Open Swagger → go to `GET /auth/google`
+   This will redirect you to a **Google Sign-In page**.
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+2. Log in with your Google account.
 
-## Stay in touch
+3. Google will redirect to:
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+   ```
+   http://localhost:3000/auth/google/callback?code=...
+   ```
 
-## License
+4. The app will exchange the `code` for an **access + refresh token** and save them to `token.json`.
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+   > ✅ This happens only once. Next time the app reuses the stored token.
+
+---
+
+## 📖 Reading a Google Doc
+
+Once authenticated, you can fetch the text of a Google Doc:
+
+1. Open Swagger → `GET /docs/:docId`
+   Example:
+
+   ```
+   http://localhost:3000/docs/1A2B3C4D5E6F
+   ```
+
+   (Replace with your Google Doc ID from its URL)
+
+2. The response will contain the document’s text content:
+
+   ```json
+   {
+     "content": ["Heading 1", "Some paragraph text", "Another line"]
+   }
+   ```
+
+---
+
+## 🛠 Project Structure
+
+```
+src/
+ ├─ app.module.ts       # Root module
+ ├─ google/             # Google OAuth logic
+ ├─ docs/               # Docs controller + service
+ └─ google-auth.service.ts
+credentials.json        # Google API credentials
+token.json              # Saved OAuth tokens (auto-generated)
+```
+
+---
+
+## ✅ Testing Steps
+
+1. Run the app:
+
+   ```bash
+   npm run start:dev
+   ```
+
+2. Go to Swagger: [http://localhost:3000/api](http://localhost:3000/api)
+
+3. Authenticate via `/auth/google`.
+
+4. Copy a Google Doc link → extract its ID → call `/docs/{docId}`.
+
+5. See the document content in JSON.
+
+---
+
+⚠️ Notes:
+
+- Only Docs you **own** or have been **shared with your Google account** can be accessed.
+- If token expires, delete `token.json` and re-authenticate.
+
+---
