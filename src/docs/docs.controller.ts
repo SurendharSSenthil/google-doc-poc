@@ -10,6 +10,7 @@ import {
 } from '@nestjs/common';
 import { DocsService } from './docs.service';
 import { ApiTags } from '@nestjs/swagger';
+import { WatchDocDto } from './dots/watchDoc.dto';
 
 @ApiTags('docs')
 @Controller('docs')
@@ -21,10 +22,10 @@ export class DocsController {
     return this.docsService.readDoc(id);
   }
 
-  @Post(':id')
-  async editDoc(@Param('id') id: string, @Body('text') text: string) {
-    return this.docsService.editDoc(id, text);
-  }
+  // @Post(':id')
+  // async editDoc(@Param('id') id: string, @Body('text') text: string) {
+  //   return this.docsService.editDoc(id, text);
+  // }
 
   @Delete(':id')
   async deleteDoc(@Param('id') id: string) {
@@ -32,11 +33,9 @@ export class DocsController {
   }
 
   @Post('watch')
-  async watchFile(
-    @Body('fileId') fileId: string,
-    @Body('webhookUrl') webhookUrl: string,
-  ) {
-    return this.docsService.watchFile(fileId, webhookUrl);
+  async watchFile(@Body() body: WatchDocDto) {
+    console.log(' Setting up watch for file:', body.fileId);
+    return this.docsService.watchFile(body.fileId, body.webhookUrl);
   }
 
   // Webhook endpoint to receive notifications

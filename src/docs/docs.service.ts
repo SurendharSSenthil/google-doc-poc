@@ -25,26 +25,26 @@ export class DocsService {
     return { title: res.data.title, content: content.join('') };
   }
 
-  async editDoc(docId: string, text: string) {
-    const auth = this.googleAuth.getClient();
-    const docs = google.docs({ version: 'v1', auth });
+  // async editDoc(docId: string, text: string) {
+  //   const auth = this.googleAuth.getClient();
+  //   const docs = google.docs({ version: 'v1', auth });
 
-    await docs.documents.batchUpdate({
-      documentId: docId,
-      requestBody: {
-        requests: [
-          {
-            insertText: {
-              location: { index: 1 }, // inserts after start
-              text,
-            },
-          },
-        ],
-      },
-    });
+  //   await docs.documents.batchUpdate({
+  //     documentId: docId,
+  //     requestBody: {
+  //       requests: [
+  //         {
+  //           insertText: {
+  //             location: { index: 1 }, // inserts after start
+  //             text,
+  //           },
+  //         },
+  //       ],
+  //     },
+  //   });
 
-    return { message: 'Text inserted successfully' };
-  }
+  //   return { message: 'Text inserted successfully' };
+  // }
 
   async deleteDoc(docId: string) {
     const auth = this.googleAuth.getClient();
@@ -57,17 +57,25 @@ export class DocsService {
   async watchFile(fileId: string, webhookUrl: string) {
     const auth = this.googleAuth.getClient();
     const drive = google.drive({ version: 'v3', auth });
+
     const channel = {
-      id: `${Date.now()}`,
+      id: `${Date.now()}`, // unique ID per channel
       type: 'web_hook',
-      address: webhookUrl,
+      address: webhookUrl, // dynamic webhook URL
     };
 
-    const res = await drive.files.watch({
-      fileId,
-      requestBody: channel,
-    });
+    try {
+      // You need to include the channel object in the requestBody
+      const res = await drive.files.watch({
+        fileId,
+        requestBody: channel,
+      });
 
-    return res.data;
+      console.log('Watch response:', res.data);
+      return res.data;
+    } catch (err) {
+      console.error('Error setting watch:', err);
+      throw err;
+    }
   }
 }
