@@ -53,4 +53,21 @@ export class DocsService {
     await drive.files.delete({ fileId: docId });
     return { message: 'Document deleted successfully' };
   }
+
+  async watchFile(fileId: string, webhookUrl: string) {
+    const auth = this.googleAuth.getClient();
+    const drive = google.drive({ version: 'v3', auth });
+    const channel = {
+      id: `${Date.now()}`,
+      type: 'web_hook',
+      address: webhookUrl,
+    };
+
+    const res = await drive.files.watch({
+      fileId,
+      requestBody: channel,
+    });
+
+    return res.data;
+  }
 }

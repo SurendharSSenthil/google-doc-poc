@@ -1,4 +1,13 @@
-import { Controller, Get, Param, Post, Body, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Param,
+  Post,
+  Body,
+  Delete,
+  Headers,
+  Req,
+} from '@nestjs/common';
 import { DocsService } from './docs.service';
 import { ApiTags } from '@nestjs/swagger';
 
@@ -20,5 +29,22 @@ export class DocsController {
   @Delete(':id')
   async deleteDoc(@Param('id') id: string) {
     return this.docsService.deleteDoc(id);
+  }
+
+  @Post('watch')
+  async watchFile(
+    @Body('fileId') fileId: string,
+    @Body('webhookUrl') webhookUrl: string,
+  ) {
+    return this.docsService.watchFile(fileId, webhookUrl);
+  }
+
+  // Webhook endpoint to receive notifications
+  @Post('notifications')
+  async handleNotification(@Headers() headers: any, @Req() req: any) {
+    console.log('📩 Received notification: ', headers);
+    // headers['x-goog-resource-id'] -> file identifier
+    // headers['x-goog-changed'] -> what changed
+    return { received: true };
   }
 }
